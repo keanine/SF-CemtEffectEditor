@@ -25,51 +25,37 @@ namespace SonicFrontiersCemtColorEditor
         string folderPath = string.Empty;
         List<string> cemtFiles = new List<string>();
 
-        int rOffset = 776; //HEX 308
-        int gOffset = 784; //HEX 310
-        int bOffset = 792; //HEX 318
-        int aOffset = 800; //HEX 320
+        int colorOffset = 0x308;
+        int secondColorOffset = 0x328;
+
+        int rOffset = 0;
+        int gOffset = 8;
+        int bOffset = 16;
+        int aOffset = 24;
 
         public MainWindow()
         {
             InitializeComponent();
+            outputText.Text = colorOffset.ToString();
         }
 
         private void EditColor_Click(object sender, RoutedEventArgs e)
         {
-            SetColors();
-            //string filepath = fileText.Text;
-            //byte[] bytes = File.ReadAllBytes(filepath);
-
-            //int newR = int.Parse(colorText.Text.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
-            //int newG = int.Parse(colorText.Text.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
-            //int newB = int.Parse(colorText.Text.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
-            //int newA = int.Parse(colorText.Text.Substring(6, 2), System.Globalization.NumberStyles.HexNumber);
-
-            ////outputText.Text = (newA).ToString();
-
-            ////float currentA = BitConverter.ToSingle(bytes, aOffset);
-            ////outputText.Text = currentA.ToString();
-
-            //byte[] newRBytes = BitConverter.GetBytes(newR / 255f);
-            //byte[] newGBytes = BitConverter.GetBytes(newG / 255f);
-            //byte[] newBBytes = BitConverter.GetBytes(newB / 255f);
-            //byte[] newABytes = BitConverter.GetBytes(newA / 255f);
-
-            //for (int i = 0; i < 4; i++)
-            //{
-            //    bytes[i + rOffset] = newRBytes[i];
-            //    bytes[i + gOffset] = newGBytes[i];
-            //    bytes[i + bOffset] = newBBytes[i];
-            //    bytes[i + aOffset] = newABytes[i];
-            //}
-
-            ////float currentR = BitConverter.ToSingle(bytes, rOffset);
-            ////outputText.Text = currentR.ToString();
-            //File.WriteAllBytes(filepath, bytes);
+            foreach (string file in cemtFiles)
+            {
+                SetColor(file, colorOffset);
+            }
         }
 
-        private void SetColors()
+        private void EditSecondSet_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (string file in cemtFiles)
+            {
+                SetColor(file, secondColorOffset);
+            }
+        }
+
+        private void SetColor(string file, int offset)
         {
             int newR = int.Parse(colorText.Text.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
             int newG = int.Parse(colorText.Text.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
@@ -81,20 +67,17 @@ namespace SonicFrontiersCemtColorEditor
             byte[] newBBytes = BitConverter.GetBytes(newB / 255f);
             byte[] newABytes = BitConverter.GetBytes(newA / 255f);
 
-            foreach (string file in cemtFiles)
+            byte[] bytes = File.ReadAllBytes(file);
+
+            for (int i = 0; i < 4; i++)
             {
-                byte[] bytes = File.ReadAllBytes(file);
-
-                for (int i = 0; i < 4; i++)
-                {
-                    bytes[i + rOffset] = newRBytes[i];
-                    bytes[i + gOffset] = newGBytes[i];
-                    bytes[i + bOffset] = newBBytes[i];
-                    bytes[i + aOffset] = newABytes[i];
-                }
-
-                File.WriteAllBytes(file, bytes);
+                bytes[i + offset + rOffset] = newRBytes[i];
+                bytes[i + offset + gOffset] = newGBytes[i];
+                bytes[i + offset + bOffset] = newBBytes[i];
+                bytes[i + offset + aOffset] = newABytes[i];
             }
+
+            File.WriteAllBytes(file, bytes);
         }
 
         private void Load_Click(object sender, RoutedEventArgs e)
@@ -102,6 +85,7 @@ namespace SonicFrontiersCemtColorEditor
             folderPath = fileText.Text;
 
             string[] allFiles = Directory.GetFiles(folderPath);
+            outputText.Text = string.Empty;
 
             foreach (string file in allFiles)
             {
@@ -109,6 +93,7 @@ namespace SonicFrontiersCemtColorEditor
                 if (fileName.EndsWith(".cemt") && fileName.Contains("spinatk01"))
                 {
                     cemtFiles.Add(file);
+                    outputText.Text += fileName + "\n";
                 }
             }
         }
