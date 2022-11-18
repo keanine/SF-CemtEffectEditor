@@ -8,7 +8,7 @@
         Title="MainWindow" Height="450" Width="587">
     <Grid>
         <TextBox x:Name="fileText" Margin="10,57,88,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top"/>
-        <TextBox x:Name="colorText" HorizontalAlignment="Left" Margin="10,103,0,0" TextWrapping="Wrap" Text="FF000058" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="colorText" HorizontalAlignment="Left" Margin="10,103,0,0" TextWrapping="Wrap" Text="FF0000" VerticalAlignment="Top" Width="120"/>
         <Button x:Name="EditColor" Content="Edit" HorizontalAlignment="Left" Margin="10,126,0,0" VerticalAlignment="Top" Width="120" Click="EditColor_Click"/>
         <TextBlock x:Name="outputText" Margin="10,179,10,10" TextWrapping="Wrap" Text="Debug Output"/>
         <Label Content="RGBA" HorizontalAlignment="Left" Margin="10,80,0,0" VerticalAlignment="Top"/>

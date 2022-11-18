@@ -22,6 +22,13 @@ namespace SonicFrontiersCemtColorEditor
     /// </summary>
     public partial class MainWindow : Window
     {
+        string[] blacklistedFiles =
+        {
+            "ec_so_spinatk01_dist01.cemt",
+            "ef_so_spinatk01.cemt",
+            "ef_so_spinatk01_end01.cemt"
+        };
+
         string folderPath = string.Empty;
         List<string> cemtFiles = new List<string>();
 
@@ -60,12 +67,12 @@ namespace SonicFrontiersCemtColorEditor
             int newR = int.Parse(colorText.Text.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
             int newG = int.Parse(colorText.Text.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
             int newB = int.Parse(colorText.Text.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
-            int newA = int.Parse(colorText.Text.Substring(6, 2), System.Globalization.NumberStyles.HexNumber);
+            //int newA = int.Parse(colorText.Text.Substring(6, 2), System.Globalization.NumberStyles.HexNumber);
 
             byte[] newRBytes = BitConverter.GetBytes(newR / 255f);
             byte[] newGBytes = BitConverter.GetBytes(newG / 255f);
             byte[] newBBytes = BitConverter.GetBytes(newB / 255f);
-            byte[] newABytes = BitConverter.GetBytes(newA / 255f);
+            //byte[] newABytes = BitConverter.GetBytes(newA / 255f);
 
             byte[] bytes = File.ReadAllBytes(file);
 
@@ -74,7 +81,7 @@ namespace SonicFrontiersCemtColorEditor
                 bytes[i + offset + rOffset] = newRBytes[i];
                 bytes[i + offset + gOffset] = newGBytes[i];
                 bytes[i + offset + bOffset] = newBBytes[i];
-                bytes[i + offset + aOffset] = newABytes[i];
+                //bytes[i + offset + aOffset] = newABytes[i];
             }
 
             File.WriteAllBytes(file, bytes);
@@ -92,10 +99,25 @@ namespace SonicFrontiersCemtColorEditor
                 string fileName = Path.GetFileName(file);
                 if (fileName.EndsWith(".cemt") && fileName.Contains("spinatk01"))
                 {
-                    cemtFiles.Add(file);
-                    outputText.Text += fileName + "\n";
+                    if (!blacklistedFiles.Contains(fileName))
+                    {
+                        cemtFiles.Add(file);
+                        outputText.Text += fileName + " | 1: " + GenerateColorCodeFromOffset(file, colorOffset) + " | 2: " + GenerateColorCodeFromOffset(file, secondColorOffset) + "\n";
+                    }
                 }
             }
+        }
+
+        private string GenerateColorCodeFromOffset(string file, int offset)
+        {
+            byte[] bytes = File.ReadAllBytes(file);
+
+            string r = ((int)(BitConverter.ToSingle(bytes, offset + rOffset) * 255f)).ToString("X2");
+            string g = ((int)(BitConverter.ToSingle(bytes, offset + gOffset) * 255f)).ToString("X2");
+            string b = ((int)(BitConverter.ToSingle(bytes, offset + bOffset) * 255f)).ToString("X2");
+            //string a = ((int)(BitConverter.ToSingle(bytes, offset + aOffset) * 255f)).ToString("X2");
+
+            return r + g + b;
         }
     }
 }
