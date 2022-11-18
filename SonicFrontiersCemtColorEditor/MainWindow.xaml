@@ -5,32 +5,28 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SonicFrontiersCemtColorEditor"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="363">
+        Title="MainWindow" Height="450" Width="390">
     <Grid>
         <TextBox x:Name="fileText" Margin="10,36,88,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top"/>
-        <TextBox x:Name="colorText" HorizontalAlignment="Left" Margin="10,85,0,0" TextWrapping="Wrap" Text="FF0000" VerticalAlignment="Top" Width="120"/>
-        <Button x:Name="EditColor" Content="Edit" HorizontalAlignment="Left" Margin="10,108,0,0" VerticalAlignment="Top" Width="120" Click="EditColor_Click"/>
-        <Label Content="RGBA" HorizontalAlignment="Left" Margin="10,59,0,0" VerticalAlignment="Top"/>
         <Label Content="Sonic.pac folder" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <Button x:Name="Load" Content="Load" Margin="0,35,10,0" VerticalAlignment="Top" Click="Load_Click" HorizontalAlignment="Right" Width="69"/>
-        <Button x:Name="EditSecondSet" Content="EditSecondSet" HorizontalAlignment="Left" Margin="10,133,0,0" VerticalAlignment="Top" Width="120" Click="EditSecondSet_Click"/>
         <TabControl Margin="0,158,0,0">
             <TabItem Header="Jump Ball">
                 <Grid Background="#FFE5E5E5">
                     <StackPanel Orientation="Horizontal">
-                        <StackPanel x:Name="jumpBallEntries" Orientation="Vertical">
+                        <WrapPanel x:Name="jumpBallEntries" Orientation="Vertical">
 
                             <!--<Canvas Height="30">
                                 <Rectangle HorizontalAlignment="Center" Height="20" Fill="Red" Stroke="DarkGray" VerticalAlignment="Top" Width="110" MouseUp="Rectangle_MouseUp" Canvas.Left="10" Canvas.Top="36"/>
                                 <Label Content="Circle" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
                                 <Rectangle Height="20" Fill="Red" Stroke="DarkGray" Width="110" MouseUp="Rectangle_MouseUp_1" Canvas.Left="10" Canvas.Top="61" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                             </Canvas>-->
-                        </StackPanel>
+                        </WrapPanel>
                     </StackPanel>
-                    <Button x:Name="SaveJumpBall" Content="Save" Margin="0,0,10,10" Click="EditColor_Click" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="120"/>
+                    <Button x:Name="SaveJumpBall" Content="Save" Margin="0,0,10,10" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="120" Click="SaveJumpBall_Click"/>
                 </Grid>
             </TabItem>
         </TabControl>
-        <TextBox x:Name="outputText" IsReadOnly="True" Margin="135,59,10,0" TextWrapping="Wrap" Text="Debug Output" VerticalAlignment="Top" Height="94"/>
+        <TextBox x:Name="outputText" IsReadOnly="True" Margin="10,59,10,0" TextWrapping="Wrap" Text="Debug Output" VerticalAlignment="Top" Height="94"/>
     </Grid>
 </Window>

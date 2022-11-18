@@ -27,8 +27,6 @@ namespace SonicFrontiersCemtColorEditor
         public ColorPickerDialog(Color initialColor)
         {
             InitializeComponent();
-            //picker.Color = initialColor;
-            //picker.ColorState.RGB_R
             Color = initialColor;
         }
 

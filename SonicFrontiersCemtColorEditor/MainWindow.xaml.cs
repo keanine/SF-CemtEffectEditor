@@ -32,13 +32,15 @@ namespace SonicFrontiersCemtColorEditor
         string folderPath = string.Empty;
         List<string> cemtFiles = new List<string>();
 
-        int colorOffset = 0x308;
-        int secondColorOffset = 0x328;
+        public static int colorOffset = 0x308;
+        public static int secondColorOffset = 0x328;
+         
+        public static int rOffset = 0;
+        public static int gOffset = 8;
+        public static int bOffset = 16;
+        public static int aOffset = 24;
 
-        int rOffset = 0;
-        int gOffset = 8;
-        int bOffset = 16;
-        int aOffset = 24;
+        List<CemtData> cemtData = new List<CemtData>();
 
         public MainWindow()
         {
@@ -64,27 +66,27 @@ namespace SonicFrontiersCemtColorEditor
 
         private void SetColor(string file, int offset)
         {
-            int newR = int.Parse(colorText.Text.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
-            int newG = int.Parse(colorText.Text.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
-            int newB = int.Parse(colorText.Text.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
-            //int newA = int.Parse(colorText.Text.Substring(6, 2), System.Globalization.NumberStyles.HexNumber);
+            //int newR = int.Parse(colorText.Text.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
+            //int newG = int.Parse(colorText.Text.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
+            //int newB = int.Parse(colorText.Text.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
+            ////int newA = int.Parse(colorText.Text.Substring(6, 2), System.Globalization.NumberStyles.HexNumber);
 
-            byte[] newRBytes = BitConverter.GetBytes(newR / 255f);
-            byte[] newGBytes = BitConverter.GetBytes(newG / 255f);
-            byte[] newBBytes = BitConverter.GetBytes(newB / 255f);
-            //byte[] newABytes = BitConverter.GetBytes(newA / 255f);
+            //byte[] newRBytes = BitConverter.GetBytes(newR / 255f);
+            //byte[] newGBytes = BitConverter.GetBytes(newG / 255f);
+            //byte[] newBBytes = BitConverter.GetBytes(newB / 255f);
+            ////byte[] newABytes = BitConverter.GetBytes(newA / 255f);
 
-            byte[] bytes = File.ReadAllBytes(file);
+            //byte[] bytes = File.ReadAllBytes(file);
 
-            for (int i = 0; i < 4; i++)
-            {
-                bytes[i + offset + rOffset] = newRBytes[i];
-                bytes[i + offset + gOffset] = newGBytes[i];
-                bytes[i + offset + bOffset] = newBBytes[i];
-                //bytes[i + offset + aOffset] = newABytes[i];
-            }
+            //for (int i = 0; i < 4; i++)
+            //{
+            //    bytes[i + offset + rOffset] = newRBytes[i];
+            //    bytes[i + offset + gOffset] = newGBytes[i];
+            //    bytes[i + offset + bOffset] = newBBytes[i];
+            //    //bytes[i + offset + aOffset] = newABytes[i];
+            //}
 
-            File.WriteAllBytes(file, bytes);
+            //File.WriteAllBytes(file, bytes);
         }
 
         private void Load_Click(object sender, RoutedEventArgs e)
@@ -104,7 +106,9 @@ namespace SonicFrontiersCemtColorEditor
                         cemtFiles.Add(file);
                         outputText.Text += fileName + " | 1: " + GenerateColorCodeFromOffset(file, colorOffset) + " | 2: " + GenerateColorCodeFromOffset(file, secondColorOffset) + "\n";
 
-                        CreateCemtEntry(jumpBallEntries, Path.GetFileNameWithoutExtension(file), GenerateColorFromOffset(file, colorOffset), GenerateColorFromOffset(file, secondColorOffset));
+                        string name = Path.GetFileName(file).Substring(fileName.IndexOf("spinatk01_"));
+                        name = name.Substring(9, name.Length - 9 - ".cemt".Length);
+                        CreateCemtEntry(jumpBallEntries, name, file, GenerateColorFromOffset(file, colorOffset), GenerateColorFromOffset(file, secondColorOffset));
                     }
                 }
             }
@@ -138,15 +142,18 @@ namespace SonicFrontiersCemtColorEditor
 
 
 
-        private void CreateCemtEntry(Panel panel, string name, Color firstColor, Color secondColor)
+        private void CreateCemtEntry(Panel panel, string name, string filepath, Color firstColor, Color secondColor)
         {
             StackPanel stack = new StackPanel();
+            stack.Width = 140;
 
             Label label = new Label();
             Rectangle color1 = new Rectangle();
             Rectangle color2 = new Rectangle();
 
             label.Content = name;
+            label.Width = 140;
+            label.HorizontalContentAlignment = HorizontalAlignment.Center;
 
             color1.Width = 110;
             color1.Height = 20;
@@ -165,6 +172,9 @@ namespace SonicFrontiersCemtColorEditor
             stack.Children.Add(color2);
 
             panel.Children.Add(stack);
+
+            CemtData data = new CemtData(name, filepath, color1, color2);
+            cemtData.Add(data);
         }
 
         private void CemtEntryColor_Click(object sender, MouseButtonEventArgs e)
@@ -178,6 +188,14 @@ namespace SonicFrontiersCemtColorEditor
             if (result.HasValue && result.Value)
             {
                 rect.Fill = new SolidColorBrush(dialog.Color);
+            }
+        }
+
+        private void SaveJumpBall_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var data in cemtData)
+            {
+                data.SaveDataToFile();
             }
         }
     }
