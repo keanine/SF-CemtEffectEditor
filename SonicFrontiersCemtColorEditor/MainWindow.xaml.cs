@@ -44,9 +44,6 @@ namespace SonicFrontiersCemtColorEditor
         {
             InitializeComponent();
             outputText.Text = colorOffset.ToString();
-
-            CreateCemtEntry(jumpBallEntries, "Circle");
-            CreateCemtEntry(jumpBallEntries, "Light");
         }
 
         private void EditColor_Click(object sender, RoutedEventArgs e)
@@ -106,6 +103,8 @@ namespace SonicFrontiersCemtColorEditor
                     {
                         cemtFiles.Add(file);
                         outputText.Text += fileName + " | 1: " + GenerateColorCodeFromOffset(file, colorOffset) + " | 2: " + GenerateColorCodeFromOffset(file, secondColorOffset) + "\n";
+
+                        CreateCemtEntry(jumpBallEntries, Path.GetFileNameWithoutExtension(file), GenerateColorFromOffset(file, colorOffset), GenerateColorFromOffset(file, secondColorOffset));
                     }
                 }
             }
@@ -123,7 +122,23 @@ namespace SonicFrontiersCemtColorEditor
             return r + g + b;
         }
 
-        private void CreateCemtEntry(Panel panel, string name)
+        private Color GenerateColorFromOffset(string file, int offset)
+        {
+            byte[] bytes = File.ReadAllBytes(file);
+
+            Color color = new Color();
+
+            color.ScR = BitConverter.ToSingle(bytes, offset + rOffset);
+            color.ScG = BitConverter.ToSingle(bytes, offset + gOffset);
+            color.ScB = BitConverter.ToSingle(bytes, offset + bOffset);
+            color.ScA = 1;
+
+            return color;
+        }
+
+
+
+        private void CreateCemtEntry(Panel panel, string name, Color firstColor, Color secondColor)
         {
             StackPanel stack = new StackPanel();
 
@@ -135,13 +150,13 @@ namespace SonicFrontiersCemtColorEditor
 
             color1.Width = 110;
             color1.Height = 20;
-            color1.Fill = new SolidColorBrush(Colors.Black);
+            color1.Fill = new SolidColorBrush(firstColor);
             color1.Stroke = new SolidColorBrush(Colors.DarkGray);
             color1.MouseUp += CemtEntryColor_Click;
 
             color2.Width = 110;
             color2.Height = 20;
-            color2.Fill = new SolidColorBrush(Colors.Black);
+            color2.Fill = new SolidColorBrush(secondColor);
             color2.Stroke = new SolidColorBrush(Colors.DarkGray);
             color2.MouseUp += CemtEntryColor_Click;
 
