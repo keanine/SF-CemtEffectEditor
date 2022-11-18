@@ -1,0 +1,19 @@
+﻿<Window x:Class="SonicFrontiersCemtColorEditor.ColorPickerDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SonicFrontiersCemtColorEditor"
+        xmlns:colorpicker="clr-namespace:ColorPicker;assembly=ColorPicker"
+        mc:Ignorable="d"
+        Title="ColorPickerDialog" Height="457" Width="244">
+    <Grid>
+        <colorpicker:SquarePicker x:Name="picker" Margin="10,10,10,0" Height="206" VerticalAlignment="Top" ColorChanged="picker_ColorChanged" />
+        <colorpicker:ColorSliders ColorState="{Binding ElementName=picker, Path=ColorState, Mode=TwoWay}" ShowAlpha="False" Margin="10,221,10,0" Height="17" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" >
+        </colorpicker:ColorSliders>
+        <colorpicker:HexColorTextBox  ColorState="{Binding ElementName=picker, Path=ColorState, Mode=TwoWay}" ShowAlpha="False" Margin="0,348,10,0" Height="23" VerticalAlignment="Top" HorizontalAlignment="Right" Width="80" />
+        <!--<colorpicker:StandardColorPicker x:Name="picker" Height="380" Margin="10,10,10,44"/>-->
+        <Button x:Name="SelectColor" Content="Select" Margin="10,0,10,10" Height="20" VerticalAlignment="Bottom" Click="SelectColor_Click"/>
+        <Rectangle x:Name="colorPreview" Height="20" Margin="10,350,95,0" Fill="Red" Stroke="DarkGray" VerticalAlignment="Top"/>
+    </Grid>
+</Window>

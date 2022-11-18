@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -44,6 +44,9 @@ namespace SonicFrontiersCemtColorEditor
         {
             InitializeComponent();
             outputText.Text = colorOffset.ToString();
+
+            CreateCemtEntry(jumpBallEntries, "Circle");
+            CreateCemtEntry(jumpBallEntries, "Light");
         }
 
         private void EditColor_Click(object sender, RoutedEventArgs e)
@@ -118,6 +121,49 @@ namespace SonicFrontiersCemtColorEditor
             //string a = ((int)(BitConverter.ToSingle(bytes, offset + aOffset) * 255f)).ToString("X2");
 
             return r + g + b;
+        }
+
+        private void CreateCemtEntry(Panel panel, string name)
+        {
+            StackPanel stack = new StackPanel();
+
+            Label label = new Label();
+            Rectangle color1 = new Rectangle();
+            Rectangle color2 = new Rectangle();
+
+            label.Content = name;
+
+            color1.Width = 110;
+            color1.Height = 20;
+            color1.Fill = new SolidColorBrush(Colors.Black);
+            color1.Stroke = new SolidColorBrush(Colors.DarkGray);
+            color1.MouseUp += CemtEntryColor_Click;
+
+            color2.Width = 110;
+            color2.Height = 20;
+            color2.Fill = new SolidColorBrush(Colors.Black);
+            color2.Stroke = new SolidColorBrush(Colors.DarkGray);
+            color2.MouseUp += CemtEntryColor_Click;
+
+            stack.Children.Add(label);
+            stack.Children.Add(color1);
+            stack.Children.Add(color2);
+
+            panel.Children.Add(stack);
+        }
+
+        private void CemtEntryColor_Click(object sender, MouseButtonEventArgs e)
+        {
+            Rectangle rect = (Rectangle)sender;
+
+            Color initialColor = ((SolidColorBrush)rect.Fill).Color;
+            ColorPickerDialog dialog = new ColorPickerDialog(initialColor);
+            bool? result = dialog.ShowDialog();
+        
+            if (result.HasValue && result.Value)
+            {
+                rect.Fill = new SolidColorBrush(dialog.Color);
+            }
         }
     }
 }
