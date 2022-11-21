@@ -99,15 +99,16 @@ namespace SonicFrontiersCemtColorEditor
             foreach (string file in allFiles)
             {
                 string fileName = Path.GetFileName(file);
-                if (fileName.EndsWith(".cemt") && fileName.Contains("spinatk01"))
+                if (fileName.EndsWith(".cemt") /*&& fileName.Contains("spinatk01")*/)
                 {
                     if (!blacklistedFiles.Contains(fileName))
                     {
                         cemtFiles.Add(file);
                         outputText.Text += fileName + " | 1: " + GenerateColorCodeFromOffset(file, colorOffset) + " | 2: " + GenerateColorCodeFromOffset(file, secondColorOffset) + "\n";
 
-                        string name = Path.GetFileName(file).Substring(fileName.IndexOf("spinatk01_"));
-                        name = name.Substring(9, name.Length - 9 - ".cemt".Length);
+                        //string name = Path.GetFileName(file).Substring(fileName.IndexOf("spinatk01_"));
+                        //name = name.Substring(9, name.Length - 9 - ".cemt".Length);
+                        string name = Path.GetFileName(file);
                         CreateCemtEntry(jumpBallEntries, name, file, GenerateColorFromOffset(file, colorOffset), GenerateColorFromOffset(file, secondColorOffset));
                     }
                 }
@@ -121,9 +122,9 @@ namespace SonicFrontiersCemtColorEditor
             string r = ((int)(BitConverter.ToSingle(bytes, offset + rOffset) * 255f)).ToString("X2");
             string g = ((int)(BitConverter.ToSingle(bytes, offset + gOffset) * 255f)).ToString("X2");
             string b = ((int)(BitConverter.ToSingle(bytes, offset + bOffset) * 255f)).ToString("X2");
-            //string a = ((int)(BitConverter.ToSingle(bytes, offset + aOffset) * 255f)).ToString("X2");
+            string a = ((int)(BitConverter.ToSingle(bytes, offset + aOffset) * 255f)).ToString("X2");
 
-            return r + g + b;
+            return r + g + b + "(A:" + a + ")";
         }
 
         private Color GenerateColorFromOffset(string file, int offset)
@@ -135,7 +136,7 @@ namespace SonicFrontiersCemtColorEditor
             color.ScR = BitConverter.ToSingle(bytes, offset + rOffset);
             color.ScG = BitConverter.ToSingle(bytes, offset + gOffset);
             color.ScB = BitConverter.ToSingle(bytes, offset + bOffset);
-            color.ScA = 1;
+            color.ScA = BitConverter.ToSingle(bytes, offset + aOffset);
 
             return color;
         }
