@@ -1,17 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Path = System.IO.Path;
 
@@ -66,6 +59,11 @@ namespace SF_CemtEffectEditor
                 {
                     CreateColorEntry(CemtColorStackPanel, color, Path.GetFileName(file));
                 }
+
+                //foreach (var rand in data.colorRandomisation)
+                //{
+                //    CreateColorEntry(CemtColorStackPanel, rand, Path.GetFileName(file));
+                //}
             }
         }
 
@@ -139,8 +137,8 @@ namespace SF_CemtEffectEditor
                 data.colors[0].Set(1, 1, 1, 1);
                 data.colors[1].Set(1, 1, 1, 1);
 
-                data.colors[2].Set(1, 1, 1, 0);
-                data.colors[3].Set(1, 1, 1, 0);
+                data.colorRandomisation[0].Set(1, 1, 1, 0);
+                data.colorRandomisation[1].Set(1, 1, 1, 0);
 
                 data.SaveToFile();
             }

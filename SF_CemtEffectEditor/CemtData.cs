@@ -17,12 +17,16 @@ namespace SF_CemtEffectEditor
         {
             new CemtColorData(offset: 0x308,  valueDistance: 0x08),
             new CemtColorData(offset: 0x328,  valueDistance: 0x08),
-            new CemtColorData(offset: 0x30C,  valueDistance: 0x08),
-            new CemtColorData(offset: 0x32C,  valueDistance: 0x08),
             new CemtColorData(offset: 0x688,  valueDistance: 0x08),
             new CemtColorData(offset: 0x690,  valueDistance: 0x08),
             new CemtColorData(offset: 0x3688, valueDistance: 0x2C),
             new CemtColorData(offset: 0x369C, valueDistance: 0x2C)
+        };
+
+        public CemtColorData[] colorRandomisation =
+        {
+            new CemtColorData(offset: 0x30C,  valueDistance: 0x08),
+            new CemtColorData(offset: 0x32C,  valueDistance: 0x08)
         };
 
         public CemtData(string file)
@@ -38,11 +42,21 @@ namespace SF_CemtEffectEditor
             {
                 color.Load(cemtFile);
             }
+
+            foreach (var color in colorRandomisation)
+            {
+                color.Load(cemtFile);
+            }
         }
 
         public void SaveToFile()
         {
             foreach (var color in colors)
+            {
+                color.Save(ref bytes);
+            }
+
+            foreach (var color in colorRandomisation)
             {
                 color.Save(ref bytes);
             }
